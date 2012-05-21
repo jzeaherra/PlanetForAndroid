@@ -56,17 +56,13 @@ package planet.android;
 		
 
 		// TABLE SITES
+	    public static final String KEY_SITES_ROWID = "_id";
 	    public static final String KEY_SITES_NAME = "name";
 	    public static final String KEY_SITES_DESCRIPTION = "description";
 	    public static final String KEY_SITES_TYPE_ID = "type_id";
 	    public static final String KEY_SITES_IMAGE_URL = "image_url";
 	    public static final String KEY_SITES_CREATED_AT = "created_at";                       
 	    public static final String KEY_SITES_UPDATED_AT =  "updated_at";                        
-	    public static final String KEY_SITES_USE_ID = "user_id";
-	    public static final String KEY_SITES_IMAGE_FILE_NAME =  "image_file_name";
-	    public static final String KEY_SITES_IMAGE_CONTENT_TYPE = "image_content_type";
-	    public static final String KEY_SITES_IMAGE_FILE_SIZE =  "image_file_size";
-	    public static final String KEY_SITES_IMAGE_UPDATED_AT = "image_updated_at";
 	    public static final String KEY_SITES_LAT =  "lat";
 	    public static final String KEY_SITES_LONG =  "long";
 	    public static final String KEY_SITES_ZOOM =  "zoom";
@@ -82,6 +78,7 @@ package planet.android;
 //	    datetime "last_sync"
 
 	    //TABLE TYPES
+	    public static final String KEY_TYPES_ROWID = "_id";
 	    public static final String KEY_TYPES_NAME = "name";
 	    public static final String KEY_TYPES_DESCRIPTION =  "description";
 	    public static final String KEY_TYPES_CREATED_AT = "created_at"; 
@@ -92,19 +89,39 @@ package planet.android;
 	    private DatabaseHelper mDbHelper;
 	    private SQLiteDatabase mDb;
 
+	    
+	    private static final String DATABASE_NAME = "planet";
+	    private static final String DATABASE_TABLE_TYPES = "types";
+	    private static final String DATABASE_TABLE_SITES = "sites";
+
+	    private static final int DATABASE_VERSION = 1;
 	    /**
 	     * Database creation sql statement
 	     */
 	    private static final String DATABASE_CREATE =
-	        "create table notes (_id integer primary key autoincrement, "
-	        + "title text not null, body text not null);";
+	        "create " + DATABASE_TABLE_SITES + "(" +
+	        		KEY_SITES_ROWID + " real primary key autoincrement, "+
+	        		KEY_SITES_NAME + " text not null, "+
+	        		KEY_SITES_DESCRIPTION + " text not null, "+
+	        		KEY_SITES_TYPE_ID + " real not null, "+
+	        		KEY_SITES_IMAGE_URL + " text not null, "+
+	        		KEY_SITES_CREATED_AT + " text not null, "+
+	        		KEY_SITES_UPDATED_AT + " text not null, "+
+	        		KEY_SITES_LAT + " real not null, "+
+	        		KEY_SITES_LONG + " real not null, "+
+	        		KEY_SITES_ZOOM + " real not null, "+
+	        		KEY_SITES_LAST_SYNC + " text not null, "+
+	        		");"+
+	    	"create " + DATABASE_TABLE_TYPES + "(" +
+	        		KEY_TYPES_ROWID + " real primary key autoincrement, "+
+	        		KEY_TYPES_NAME + " text not null, "+
+	        		KEY_TYPES_DESCRIPTION + " text not null, "+
+	        		KEY_TYPES_CREATED_AT + " real not null, "+
+	        		KEY_TYPES_UPDATED_AT + " text not null, "+
+	        		KEY_TYPES_LAST_SYNC + " text not null, "+
+	        		");";
 
-	    private static final String DATABASE_NAME = "planet";
-	    private static final String DATABASE_TABLE_TYPES = "sites";
-	    private static final String DATABASE_TABLE_SITES = "sites";
-	    private static final String DATABASE_TABLE_TRIPS = "sites";
 
-	    private static final int DATABASE_VERSION = 1;
 
 	    private final Context mCtx;
 
@@ -160,57 +177,84 @@ package planet.android;
 
 
 	    /**
-	     * Create a new note using the title and body provided. If the note is
-	     * successfully created return the new rowId for that note, otherwise return
-	     * a -1 to indicate failure.
-	     * 
-	     * @param title the title of the note
-	     * @param body the body of the note
+	     * Create a new site or type
 	     * @return rowId or -1 if failed
 	     */
-	    public long createNote(String title, String body) {
-	        ContentValues initialValues = new ContentValues();
-	        initialValues.put(KEY_TITLE, title);
-	        initialValues.put(KEY_BODY, body);
 
-	        return mDb.insert(DATABASE_TABLE, null, initialValues);
+	    public long createSite(String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
+	    		String image_content_type, String image_file_size, long lat, long longi, long zoom, String last_sync) {
+	        ContentValues initialValues = new ContentValues();
+	        initialValues.put(KEY_SITES_NAME, name);
+	        initialValues.put(KEY_SITES_DESCRIPTION, description);
+	        initialValues.put(KEY_SITES_TYPE_ID, type_id);
+	        initialValues.put(KEY_SITES_IMAGE_URL, image_url);
+	        initialValues.put(KEY_SITES_CREATED_AT, created_at);
+	        initialValues.put(KEY_SITES_UPDATED_AT, updated_at);
+	        initialValues.put(KEY_SITES_LAT, lat);
+	        initialValues.put(KEY_SITES_LONG, longi);
+	        initialValues.put(KEY_SITES_ZOOM, zoom);
+	        initialValues.put(KEY_SITES_LAST_SYNC, last_sync);
+
+	        return mDb.insert(DATABASE_TABLE_SITES, null, initialValues);
+	    }
+
+	    public long createType(String name, String description, String created_at,  String updated_at, String last_sync) {
+	        ContentValues initialValues = new ContentValues();
+	        initialValues.put(KEY_TYPES_NAME, name);
+	        initialValues.put(KEY_TYPES_DESCRIPTION, description);
+	        initialValues.put(KEY_TYPES_CREATED_AT, created_at);
+	        initialValues.put(KEY_TYPES_UPDATED_AT, updated_at);
+	        initialValues.put(KEY_TYPES_LAST_SYNC, last_sync);
+
+	        return mDb.insert(DATABASE_TABLE_TYPES, null, initialValues);
 	    }
 
 	    /**
-	     * Delete the note with the given rowId
+	     * Delete the site or type with the given rowId
 	     * 
 	     * @param rowId id of note to delete
 	     * @return true if deleted, false otherwise
 	     */
-	    public boolean deleteNote(long rowId) {
+	    public boolean deleteSite(long rowId) {
 
-	        return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+	        return mDb.delete(DATABASE_TABLE_SITES, KEY_SITES_ROWID + "=" + rowId, null) > 0;
+	    }
+
+	    public boolean deleteType(long rowId) {
+
+	        return mDb.delete(DATABASE_TABLE_TYPES, KEY_TYPES_ROWID + "=" + rowId, null) > 0;
 	    }
 
 	    /**
-	     * Return a Cursor over the list of all notes in the database
+	     * Return a Cursor over the list of all Sites / Types
 	     * 
 	     * @return Cursor over all notes
 	     */
-	    public Cursor fetchAllNotes() {
+	    public Cursor fetchAllSites() {
 
-	        return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-	                KEY_BODY}, null, null, null, null, null);
+	        return mDb.query(DATABASE_TABLE_SITES, new String[] {KEY_SITES_ROWID, KEY_SITES_NAME,
+	                KEY_SITES_DESCRIPTION, KEY_SITES_IMAGE_URL}, null, null, null, null, null);
 	    }
+	    public Cursor fetchAllTypes() {
 
+	        return mDb.query(DATABASE_TABLE_TYPES, new String[] {KEY_TYPES_ROWID, KEY_TYPES_NAME,
+	                KEY_TYPES_DESCRIPTION}, null, null, null, null, null);
+	    }
+	    
 	    /**
-	     * Return a Cursor positioned at the note that matches the given rowId
+	     * Return a Cursor positioned at the Site / Type that matches the given rowId
 	     * 
 	     * @param rowId id of note to retrieve
 	     * @return Cursor positioned to matching note, if found
 	     * @throws SQLException if note could not be found/retrieved
 	     */
-	    public Cursor fetchNote(long rowId) throws SQLException {
+
+	    public Cursor fetchSite(long rowId) throws SQLException {
 
 	        Cursor mCursor =
 
-	            mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-	                    KEY_TITLE, KEY_BODY}, KEY_ROWID + "=" + rowId, null,
+	            mDb.query(true, DATABASE_TABLE_SITES, new String[] {KEY_SITES_ROWID,KEY_SITES_NAME,KEY_SITES_DESCRIPTION,KEY_SITES_TYPE_ID,KEY_SITES_IMAGE_URL,
+	            		KEY_SITES_CREATED_AT, KEY_SITES_UPDATED_AT,KEY_SITES_LAT,KEY_SITES_LONG,KEY_SITES_ZOOM,KEY_SITES_LAST_SYNC} , KEY_SITES_ROWID + "=" + rowId, null,
 	                    null, null, null, null);
 	        if (mCursor != null) {
 	            mCursor.moveToFirst();
