@@ -16,28 +16,28 @@ public class PlanetforAndroidActivity extends TabActivity {
         
         TabHost tabHost = getTabHost();
         
-        // Tab for Photos
-        TabSpec photospec = tabHost.newTabSpec("Photos");
+        // Tab for Types
+        TabSpec typespec = tabHost.newTabSpec("Types");
         // setting Title and Icon for the Tab
-        photospec.setIndicator("Types", getResources().getDrawable(R.drawable.icon_types_tab));
+        typespec.setIndicator("Types", getResources().getDrawable(R.drawable.icon_types_tab));
         Intent photosIntent = new Intent(this, TypesActivity.class);
-        photospec.setContent(photosIntent);
+        typespec.setContent(photosIntent);
  
-        // Tab for Songs
-        TabSpec songspec = tabHost.newTabSpec("Songs");
-        songspec.setIndicator("Songs", getResources().getDrawable(R.drawable.icon_sites_tab));
+        // Tab for Sites
+        TabSpec sitespec = tabHost.newTabSpec("Sites");
+        sitespec.setIndicator("Sites", getResources().getDrawable(R.drawable.icon_sites_tab));
         Intent songsIntent = new Intent(this, SitesActivity.class);
-        songspec.setContent(songsIntent);
+        sitespec.setContent(songsIntent);
  
-        // Tab for Videos
-        TabSpec videospec = tabHost.newTabSpec("Videos");
-        videospec.setIndicator("Videos", getResources().getDrawable(R.drawable.icon_trips_tab));
+        // Tab for Trips
+        TabSpec tripspec = tabHost.newTabSpec("Trips");
+        tripspec.setIndicator("Trips", getResources().getDrawable(R.drawable.icon_trips_tab));
         Intent videosIntent = new Intent(this, TripsActivity.class);
-        videospec.setContent(videosIntent);
+        tripspec.setContent(videosIntent);
  
         // Adding all TabSpec to TabHost
-        tabHost.addTab(photospec); // Adding photos tab
-        tabHost.addTab(songspec); // Adding songs tab
-        tabHost.addTab(videospec); // Adding videos tab
+        tabHost.addTab(typespec); // Add tab Types
+        tabHost.addTab(sitespec); // Add tab Sites
+        tabHost.addTab(tripspec); // Add tab Trips
     }
 }
