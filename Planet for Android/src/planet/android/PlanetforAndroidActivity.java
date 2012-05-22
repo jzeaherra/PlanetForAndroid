@@ -20,24 +20,24 @@ public class PlanetforAndroidActivity extends TabActivity {
         TabSpec typespec = tabHost.newTabSpec("Types");
         // setting Title and Icon for the Tab
         typespec.setIndicator("Types", getResources().getDrawable(R.drawable.icon_types_tab));
-        Intent photosIntent = new Intent(this, TypesActivity.class);
-        typespec.setContent(photosIntent);
+        Intent typesIntent = new Intent(this, TypesActivity.class);
+        typespec.setContent(typesIntent);
  
         // Tab for Sites
         TabSpec sitespec = tabHost.newTabSpec("Sites");
         sitespec.setIndicator("Sites", getResources().getDrawable(R.drawable.icon_sites_tab));
-        Intent songsIntent = new Intent(this, SitesActivity.class);
-        sitespec.setContent(songsIntent);
+        Intent sitesIntent = new Intent(this, SitesActivity.class);
+        sitespec.setContent(sitesIntent);
  
         // Tab for Trips
-        TabSpec tripspec = tabHost.newTabSpec("Trips");
-        tripspec.setIndicator("Trips", getResources().getDrawable(R.drawable.icon_trips_tab));
-        Intent videosIntent = new Intent(this, TripsActivity.class);
-        tripspec.setContent(videosIntent);
+//        TabSpec tripspec = tabHost.newTabSpec("Trips");
+//        tripspec.setIndicator("Trips", getResources().getDrawable(R.drawable.icon_trips_tab));
+//        Intent tripsIntent = new Intent(this, TripsActivity.class);
+//        tripspec.setContent(tripsIntent);
  
         // Adding all TabSpec to TabHost
         tabHost.addTab(typespec); // Add tab Types
         tabHost.addTab(sitespec); // Add tab Sites
-        tabHost.addTab(tripspec); // Add tab Trips
+//        tabHost.addTab(tripspec); // Add tab Trips
     }
 }
