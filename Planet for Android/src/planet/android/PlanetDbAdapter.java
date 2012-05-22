@@ -262,24 +262,52 @@ package planet.android;
 	        return mCursor;
 
 	    }
+	    public Cursor fetchType(long rowId) throws SQLException {
 
-	    /**
-	     * Update the note using the details provided. The note to be updated is
-	     * specified using the rowId, and it is altered to use the title and body
-	     * values passed in
-	     * 
-	     * @param rowId id of note to update
-	     * @param title value to set note title to
-	     * @param body value to set note body to
-	     * @return true if the note was successfully updated, false otherwise
-	     */
-	    public boolean updateNote(long rowId, String title, String body) {
-	        ContentValues args = new ContentValues();
-	        args.put(KEY_TITLE, title);
-	        args.put(KEY_BODY, body);
+	        Cursor mCursor =
 
-	        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+	            mDb.query(true, DATABASE_TABLE_TYPES, new String[] {KEY_TYPES_ROWID,KEY_TYPES_NAME,KEY_TYPES_DESCRIPTION,KEY_TYPES_CREATED_AT,KEY_TYPES_UPDATED_AT,
+	            		KEY_TYPES_LAST_SYNC} , KEY_TYPES_ROWID + "=" + rowId, null,
+	                    null, null, null, null);
+	        if (mCursor != null) {
+	            mCursor.moveToFirst();
+	        }
+	        return mCursor;
 	    }
-	}
+	    /**
+	     * Update the site / type using the details provided. The note to be updated is
+	     * specified using the rowId.
+
+	     * @return true if the site / type was successfully updated, false otherwise
+	     */
+
+	    public boolean updateSite(long rowId, String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
+	    		String image_content_type, String image_file_size, long lat, long longi, long zoom, String last_sync) {
+	        ContentValues args = new ContentValues();
+	        args.put(KEY_SITES_NAME, name);
+	        args.put(KEY_SITES_DESCRIPTION, description);
+	        args.put(KEY_SITES_TYPE_ID, type_id);
+	        args.put(KEY_SITES_IMAGE_URL, image_url);
+	        args.put(KEY_SITES_CREATED_AT, created_at);
+	        args.put(KEY_SITES_UPDATED_AT, updated_at);
+	        args.put(KEY_SITES_LAT, lat);
+	        args.put(KEY_SITES_LONG, longi);
+	        args.put(KEY_SITES_ZOOM, zoom);
+	        args.put(KEY_SITES_LAST_SYNC, last_sync);
+	        
+	        return mDb.update(DATABASE_TABLE_SITES, args, KEY_SITES_ROWID + "=" + rowId, null) > 0;
+	    }
+	    public boolean updateType(long rowId, String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
+	    		String image_content_type, String image_file_size, long lat, long longi, long zoom, String last_sync) {
+	        ContentValues args = new ContentValues();
+	        args.put(KEY_TYPES_NAME, name);
+	        args.put(KEY_TYPES_DESCRIPTION, description);
+	        args.put(KEY_TYPES_CREATED_AT, created_at);
+	        args.put(KEY_TYPES_UPDATED_AT, updated_at);
+	        args.put(KEY_TYPES_LAST_SYNC, last_sync);
+	        
+	        return mDb.update(DATABASE_TABLE_TYPES, args, KEY_TYPES_ROWID + "=" + rowId, null) > 0;
+	    }
+}
 
 
