@@ -99,8 +99,8 @@ package planet.android;
 	     * Database creation sql statement
 	     */
 	    private static final String DATABASE_CREATE =
-	        "create " + DATABASE_TABLE_SITES + "(" +
-	        		KEY_SITES_ROWID + " real primary key autoincrement, "+
+	        "create table " + DATABASE_TABLE_SITES + "(" +
+	        		KEY_SITES_ROWID + " integer primary key autoincrement, "+
 	        		KEY_SITES_NAME + " text not null, "+
 	        		KEY_SITES_DESCRIPTION + " text not null, "+
 	        		KEY_SITES_TYPE_ID + " real not null, "+
@@ -110,15 +110,15 @@ package planet.android;
 	        		KEY_SITES_LAT + " real not null, "+
 	        		KEY_SITES_LONG + " real not null, "+
 	        		KEY_SITES_ZOOM + " real not null, "+
-	        		KEY_SITES_LAST_SYNC + " text not null, "+
+	        		KEY_SITES_LAST_SYNC + " text not null "+
 	        		");"+
-	    	"create " + DATABASE_TABLE_TYPES + "(" +
-	        		KEY_TYPES_ROWID + " real primary key autoincrement, "+
+	    	"create table " + DATABASE_TABLE_TYPES + "(" +
+	        		KEY_TYPES_ROWID + " integer primary key autoincrement, "+
 	        		KEY_TYPES_NAME + " text not null, "+
 	        		KEY_TYPES_DESCRIPTION + " text not null, "+
 	        		KEY_TYPES_CREATED_AT + " real not null, "+
 	        		KEY_TYPES_UPDATED_AT + " text not null, "+
-	        		KEY_TYPES_LAST_SYNC + " text not null, "+
+	        		KEY_TYPES_LAST_SYNC + " text not null "+
 	        		");";
 
 

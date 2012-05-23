@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, PlanetforAndroidActivity!</string>
     <string name="app_name">Planet for Android</string>
+    <string name="no_sites">No has creado ningún sitio aún...</string>
 
 </resources>
