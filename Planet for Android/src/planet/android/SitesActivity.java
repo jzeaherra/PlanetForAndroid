@@ -20,7 +20,13 @@ import android.widget.SimpleCursorAdapter.ViewBinder;
 
 public class SitesActivity extends ListActivity {
 	
-	
+    private static final int ACTIVITY_CREATE=0;
+    private static final int ACTIVITY_EDIT=1;
+    
+    private static final int INSERT_ID = Menu.FIRST;
+    private static final int DELETE_ID = Menu.FIRST + 1;
+    
+    
 	private PlanetDbAdapter mDbHelper;
 	private Cursor mSitesCursor;
 	
@@ -75,26 +81,26 @@ public class SitesActivity extends ListActivity {
         setListAdapter(sites);
     
     }
-}
 
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//        menu.add(0, INSERT_ID, 0, R.string.menu_insert);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-//        switch(item.getItemId()) {
-//            case INSERT_ID:
-//                createNote();
-//                return true;
-//        }
-//
-//        return super.onMenuItemSelected(featureId, item);
-//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, INSERT_ID, 0, R.string.menu_insert);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch(item.getItemId()) {
+            case INSERT_ID:
+                createSite();
+                return true;
+        }
+
+        return super.onMenuItemSelected(featureId, item);
+    }
 //
 //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v,
@@ -115,10 +121,10 @@ public class SitesActivity extends ListActivity {
 //        return super.onContextItemSelected(item);
 //    }
 //
-//    private void createNote() {
-//        Intent i = new Intent(this, NoteEdit.class);
-//        startActivityForResult(i, ACTIVITY_CREATE);
-//    }
+    private void createSite() {
+        Intent i = new Intent(this, SiteEdit.class);
+        startActivityForResult(i, ACTIVITY_CREATE);
+    }
 //
 //    @Override
 //    protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -158,4 +164,4 @@ public class SitesActivity extends ListActivity {
 //    }
 //}
 //    }
-//}
+}
