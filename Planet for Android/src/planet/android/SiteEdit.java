@@ -1,8 +1,5 @@
 package planet.android;
 
-import com.android.demo.notepad3.NotesDbAdapter;
-import com.android.demo.notepad3.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +10,14 @@ import android.widget.EditText;
 public class SiteEdit extends Activity {
 	
 	
-    private EditText mTitleText;
-    private EditText mBodyText;
+    private EditText mNameText;
+    private EditText mDescriptionText;
+    private EditText mTypeIdText;
+    private EditText mImageUrlText;
+    private EditText mLatText;
+    private EditText mLongiText;
+    private EditText mZoomText;
+    
     private Long mRowId;
     
     
@@ -24,17 +27,30 @@ public class SiteEdit extends Activity {
         setContentView(R.layout.site_edit_layout);
         setTitle(R.string.site_edit);
 
-        mTitleText = (EditText) findViewById(R.id.title);
-        mBodyText = (EditText) findViewById(R.id.body);
+        mNameText = (EditText) findViewById(R.id.name);
+        mDescriptionText = (EditText) findViewById(R.id.description);
+        mTypeIdText = (EditText) findViewById(R.id.type_id);
+        mImageUrlText = (EditText) findViewById(R.id.image_url);
+        mLatText = (EditText) findViewById(R.id.lat);
+        mLongiText = (EditText) findViewById(R.id.longi);
+        mZoomText = (EditText) findViewById(R.id.zoom);
 
-        Button confirmButton = (Button) findViewById(R.id.confirm);
+        Button submitButton = (Button) findViewById(R.id.submit);
 
         mRowId = null;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String title = extras.getString(NotesDbAdapter.KEY_TITLE);
-            String body = extras.getString(NotesDbAdapter.KEY_BODY);
-            mRowId = extras.getLong(NotesDbAdapter.KEY_ROWID);
+            mRowId = extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID);
+            String name = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
+            String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
+            String type_id = extras.getString(PlanetDbAdapter.KEY_SITES_TYPE_ID);
+            String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
+            String created_at = extras.getString(PlanetDbAdapter.KEY_SITES_CREATED_AT);
+            String updated_at = extras.getString(PlanetDbAdapter.KEY_SITES_UPDATED_AT);
+            String lat = extras.getString(PlanetDbAdapter.KEY_SITES_LAT);
+            String longi = extras.getString(PlanetDbAdapter.KEY_SITES_LONG);
+            String zoom = extras.getString(PlanetDbAdapter.KEY_SITES_ZOOM);
+            String last_sync = extras.getString(PlanetDbAdapter.KEY_SITES_LAST_SYNC);
 
             if (title != null) {
                 mTitleText.setText(title);
