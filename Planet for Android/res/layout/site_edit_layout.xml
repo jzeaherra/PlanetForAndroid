@@ -24,7 +24,8 @@
         android:id="@+id/type_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10" />
+        android:ems="10" 
+        android:inputType="number"/>
 
     <EditText
         android:id="@+id/image_url"

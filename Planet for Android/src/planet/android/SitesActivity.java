@@ -140,28 +140,37 @@ public class SitesActivity extends ListActivity {
 //        startActivityForResult(i, ACTIVITY_EDIT);
 //    }
 //
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//        super.onActivityResult(requestCode, resultCode, intent);
-//        Bundle extras = intent.getExtras();
-//        switch(requestCode) {
-//            case ACTIVITY_CREATE:
-//                String title = extras.getString(NotesDbAdapter.KEY_TITLE);
-//                String body = extras.getString(NotesDbAdapter.KEY_BODY);
-//                mDbHelper.createNote(title, body);
-//                fillData();
-//                break;
-//            case ACTIVITY_EDIT:
-//                Long rowId = extras.getLong(NotesDbAdapter.KEY_ROWID);
-//                if (rowId != null) {
-//                    String editTitle = extras.getString(NotesDbAdapter.KEY_TITLE);
-//                    String editBody = extras.getString(NotesDbAdapter.KEY_BODY);
-//                    mDbHelper.updateNote(rowId, editTitle, editBody);
-//                }
-//                fillData();
-//                break;
-//        }
-//    }
-//}
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Bundle extras = intent.getExtras();
+        switch(requestCode) {
+            case ACTIVITY_CREATE:
+                String name = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
+                String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
+                int type_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
+                String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
+                Long lat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
+                Long longi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
+                Long zoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
+                mDbHelper.createSite( name,  description,  type_id,  image_url, lat,  longi,  zoom);
+                fillData();
+                break;
+            case ACTIVITY_EDIT:
+                Long rowId = extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID);
+                if (rowId != null) {
+                    String editName = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
+                    String editDescription = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
+                    int editType_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
+                    String editImage_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
+                    Long editLat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
+                    Long editLongi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
+                    Long editZoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
+                    mDbHelper.updateSite(rowId, editName, editDescription, editType_id,  editImage_url, editLat, editLongi, editZoom );
+                }
+                fillData();
+                break;
+        }
+    }
 }
+

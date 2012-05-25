@@ -45,30 +45,49 @@ public class SiteEdit extends Activity {
             String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
             String type_id = extras.getString(PlanetDbAdapter.KEY_SITES_TYPE_ID);
             String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
-            String created_at = extras.getString(PlanetDbAdapter.KEY_SITES_CREATED_AT);
-            String updated_at = extras.getString(PlanetDbAdapter.KEY_SITES_UPDATED_AT);
-            String lat = extras.getString(PlanetDbAdapter.KEY_SITES_LAT);
-            String longi = extras.getString(PlanetDbAdapter.KEY_SITES_LONG);
-            String zoom = extras.getString(PlanetDbAdapter.KEY_SITES_ZOOM);
-            String last_sync = extras.getString(PlanetDbAdapter.KEY_SITES_LAST_SYNC);
+            Long lat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
+            Long longi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
+            Long zoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
 
-            if (title != null) {
-                mTitleText.setText(title);
+            if (name != null) {
+            	mNameText.setText(name);
             }
-            if (body != null) {
-                mBodyText.setText(body);
+            if (description != null) {
+            	mDescriptionText.setText(description);
             }
+            if (type_id != null) {
+            	mTypeIdText.setText(type_id);
+            }
+            if (image_url != null) {
+            	mImageUrlText.setText(image_url);
+            }
+            if (lat != null) {
+            	mLatText.setText(lat.toString());
+            }
+            if (longi != null) {
+            	mLongiText.setText(longi.toString());
+            }
+            if (zoom != null) {
+            	mZoomText.setText(zoom.toString());
+            }
+            
         }
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
 
-                bundle.putString(NotesDbAdapter.KEY_TITLE, mTitleText.getText().toString());
-                bundle.putString(NotesDbAdapter.KEY_BODY, mBodyText.getText().toString());
+                bundle.putString(PlanetDbAdapter.KEY_SITES_NAME, mNameText.getText().toString());
+                bundle.putString(PlanetDbAdapter.KEY_SITES_DESCRIPTION, mDescriptionText.getText().toString());
+                bundle.putString(PlanetDbAdapter.KEY_SITES_TYPE_ID, mTypeIdText.getText().toString());
+                bundle.putString(PlanetDbAdapter.KEY_SITES_IMAGE_URL, mImageUrlText.getText().toString());
+                bundle.putLong(PlanetDbAdapter.KEY_SITES_LAT, Long.valueOf(mLatText.getText().toString()));
+                bundle.putLong(PlanetDbAdapter.KEY_SITES_LONG, Long.valueOf(mLongiText.getText().toString()));
+                bundle.putLong(PlanetDbAdapter.KEY_SITES_ZOOM, Long.valueOf(mZoomText.getText().toString()));
+
                 if (mRowId != null) {
-                    bundle.putLong(NotesDbAdapter.KEY_ROWID, mRowId);
+                    bundle.putLong(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
                 }
 
                 Intent mIntent = new Intent();
@@ -80,4 +99,4 @@ public class SiteEdit extends Activity {
         });
     }
 }
-}
+

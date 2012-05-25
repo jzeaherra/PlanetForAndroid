@@ -103,7 +103,7 @@ package planet.android;
 	        		KEY_SITES_ROWID + " integer primary key autoincrement, "+
 	        		KEY_SITES_NAME + " text not null, "+
 	        		KEY_SITES_DESCRIPTION + " text not null, "+
-	        		KEY_SITES_TYPE_ID + " real not null, "+
+	        		KEY_SITES_TYPE_ID + " integer not null, "+
 	        		KEY_SITES_IMAGE_URL + " text not null, "+
 	        		KEY_SITES_CREATED_AT + " text not null, "+
 	        		KEY_SITES_UPDATED_AT + " text not null, "+
@@ -181,19 +181,18 @@ package planet.android;
 	     * @return rowId or -1 if failed
 	     */
 
-	    public long createSite(String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
-	    		String image_content_type, String image_file_size, long lat, long longi, long zoom, String last_sync) {
+	    public long createSite(String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
 	        ContentValues initialValues = new ContentValues();
 	        initialValues.put(KEY_SITES_NAME, name);
 	        initialValues.put(KEY_SITES_DESCRIPTION, description);
 	        initialValues.put(KEY_SITES_TYPE_ID, type_id);
 	        initialValues.put(KEY_SITES_IMAGE_URL, image_url);
-	        initialValues.put(KEY_SITES_CREATED_AT, created_at);
-	        initialValues.put(KEY_SITES_UPDATED_AT, updated_at);
+	        initialValues.put(KEY_SITES_CREATED_AT, "0");   // To fix..
+	        initialValues.put(KEY_SITES_UPDATED_AT, "0");   // To fix..
 	        initialValues.put(KEY_SITES_LAT, lat);
 	        initialValues.put(KEY_SITES_LONG, longi);
 	        initialValues.put(KEY_SITES_ZOOM, zoom);
-	        initialValues.put(KEY_SITES_LAST_SYNC, last_sync);
+	        initialValues.put(KEY_SITES_LAST_SYNC, "0");
 
 	        return mDb.insert(DATABASE_TABLE_SITES, null, initialValues);
 	    }
@@ -281,19 +280,18 @@ package planet.android;
 	     * @return true if the site / type was successfully updated, false otherwise
 	     */
 
-	    public boolean updateSite(long rowId, String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
-	    		String image_content_type, String image_file_size, long lat, long longi, long zoom, String last_sync) {
+	    public boolean updateSite(long rowId, String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
 	        ContentValues args = new ContentValues();
 	        args.put(KEY_SITES_NAME, name);
 	        args.put(KEY_SITES_DESCRIPTION, description);
 	        args.put(KEY_SITES_TYPE_ID, type_id);
 	        args.put(KEY_SITES_IMAGE_URL, image_url);
-	        args.put(KEY_SITES_CREATED_AT, created_at);
-	        args.put(KEY_SITES_UPDATED_AT, updated_at);
+	        args.put(KEY_SITES_CREATED_AT, "0");
+	        args.put(KEY_SITES_UPDATED_AT, "0");
 	        args.put(KEY_SITES_LAT, lat);
 	        args.put(KEY_SITES_LONG, longi);
 	        args.put(KEY_SITES_ZOOM, zoom);
-	        args.put(KEY_SITES_LAST_SYNC, last_sync);
+	        args.put(KEY_SITES_LAST_SYNC, "0");
 	        
 	        return mDb.update(DATABASE_TABLE_SITES, args, KEY_SITES_ROWID + "=" + rowId, null) > 0;
 	    }
