@@ -43,6 +43,7 @@ public class SitesActivity extends ListActivity {
     private void fillData() {
         // Get all of the rows from the database and create the item list
         mSitesCursor = mDbHelper.fetchAllSites();
+        mSitesCursor.moveToFirst();
         //if (mSitesCursor.isAfterLast()){
         startManagingCursor(mSitesCursor);
 
@@ -50,7 +51,7 @@ public class SitesActivity extends ListActivity {
         String[] from = new String[]{PlanetDbAdapter.KEY_SITES_NAME, PlanetDbAdapter.KEY_SITES_DESCRIPTION,PlanetDbAdapter.KEY_SITES_IMAGE_URL};
 
         // and an array of the fields we want to bind those fields to (in this case just text1)
-        int[] to = new int[]{R.id.name, R.id.description, R.id.img};
+        int[] to = new int[]{R.id.name, R.id.description, R.id.site_photo};
         
         
         
@@ -58,25 +59,35 @@ public class SitesActivity extends ListActivity {
         // Now create a simple cursor adapter and set it to display
         SimpleCursorAdapter sites = new SimpleCursorAdapter(this, R.layout.sites_row, mSitesCursor, from, to);
    
-        // We create a ViewBinder, so that we can represent an image within our rows...
-        if (! sites.isEmpty()){
-        ViewBinder viewBinder = new ViewBinder() {
-
-            public boolean setViewValue(View view, Cursor cursor,
-                    int columnIndex) {
-                ImageView image = (ImageView) view;
-                BitmapFactory.Options options = new BitmapFactory.Options();
-          	    options.inSampleSize = 2;
-          	    Bitmap bm = BitmapFactory.decodeFile(cursor.getString(columnIndex), options);
-          	    image.setImageBitmap(bm);
-                return true;
-            }
-        };
         
-        ImageView image = (ImageView) findViewById(R.id.img);
-        viewBinder.setViewValue(image, mSitesCursor, 2);// mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_IMAGE_URL)
-        sites.setViewBinder(viewBinder);
-        }
+       
+        
+        // We create a ViewBinder, so that we can represent an image within our rows...
+//        if (! sites.isEmpty()){
+//        SimpleCursorAdapter.ViewBinder viewBinder = new SimpleCursorAdapter.ViewBinder()  {
+//        	
+//        	@Override
+//            public abstract boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+//        		
+//                ImageView image = (ImageView) view;
+//                Bitmap bm;
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//          	    options.inSampleSize = 2;
+//          	    try{
+//          	    bm = BitmapFactory.decodeFile(cursor.getString(columnIndex), options);
+//          	    image.setImageBitmap(bm);
+//          	    }catch (Exception e) {
+//          	    bm = BitmapFactory.decodeResource( getResources(), R.drawable.ic_launcher, options);
+//          	    }
+//          	    
+//                return true;
+//            }
+//        };
+//        
+//        ImageView photo = (ImageView) findViewById(R.id.site_photo);
+//        viewBinder.setViewValue(photo, mSitesCursor, 2);// mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_IMAGE_URL)
+//        sites.setViewBinder(viewBinder);
+//        }
         
         setListAdapter(sites);
     
