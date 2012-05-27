@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,15 +31,20 @@ public class SiteEdit extends Activity {
     private EditText mLongiText;
     private EditText mZoomText;
     
-    private Integer mRowId;
+    private Long mRowId;
     
-    
-    @Override
+    private PlanetDbAdapter mDbHelper;
+	private Cursor mSitesCursor;
+
+	    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.site_edit_layout);
         setTitle(R.string.site_edit);
-
+      
+        mDbHelper = new PlanetDbAdapter(this);
+        mDbHelper.open();
+        
         mNameText = (EditText) findViewById(R.id.name);
         mDescriptionText = (EditText) findViewById(R.id.description);
         mTypeIdText = (EditText) findViewById(R.id.type_id);
@@ -50,45 +56,16 @@ public class SiteEdit extends Activity {
 
         Button submitButton = (Button) findViewById(R.id.submit);
 
-        mRowId = (Integer) null;
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mRowId = extras.getInt(PlanetDbAdapter.KEY_SITES_ROWID);
-            String name = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
-            String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
-            Integer type_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
-            String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
-            Long lat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
-            Long longi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
-            Long zoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
-
-            if (name != null) {
-            	mNameText.setText(name);
-            } else { mNameText.setText("Nombre");}
-            if (description != null) {
-            	mDescriptionText.setText(description);
-            }else { mDescriptionText.setText("Descripción");}
-            if (type_id != null) {
-            	mTypeIdText.setText((type_id.toString()));
-            }else { mTypeIdText.setText("Tipo");}
-            if (image_url != null) {
-            	mImageUrlText.setText(image_url);
-            	try { 
-            		Uri tururu = Uri.parse(image_url);
-            		if (new File(tururu.toString()).exists() ) {mSiteImage.setImageURI(tururu);}
-            		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
-            		} catch (Exception e){}
-            }else { mImageUrlText.setText("Fotografía");}
-            if (lat != null) {
-            	mLatText.setText(lat.toString());
-            }else { mLatText.setText("Latitud");}
-            if (longi != null) {
-            	mLongiText.setText(longi.toString());
-            }else { mLongiText.setText("Longitud");}
-            if (zoom != null) {
-            	mZoomText.setText(zoom.toString());
-            }else { mZoomText.setText("Zoom");}
-            
+        mRowId = null;
+        
+        mRowId = (savedInstanceState == null) ? null :
+            (Long) savedInstanceState.getSerializable(PlanetDbAdapter.KEY_SITES_ROWID);
+        if (mRowId == null) {
+            Bundle extras = getIntent().getExtras();
+            mRowId = extras != null ? extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID)
+                                    : null;
+           	fillData(mRowId);
+        	
         }else{
         	mNameText.setText("Nombre");
         	mDescriptionText.setText("Descripción");
@@ -98,27 +75,13 @@ public class SiteEdit extends Activity {
         	mLongiText.setText("Longitud");
         	mZoomText.setText("Zoom");
         }
+                
 
         submitButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
 
-                bundle.putString(PlanetDbAdapter.KEY_SITES_NAME, mNameText.getText().toString());
-                bundle.putString(PlanetDbAdapter.KEY_SITES_DESCRIPTION, mDescriptionText.getText().toString());
-                bundle.putInt(PlanetDbAdapter.KEY_SITES_TYPE_ID, Integer.valueOf(mTypeIdText.getText().toString()));
-                bundle.putString(PlanetDbAdapter.KEY_SITES_IMAGE_URL, mImageUrlText.getText().toString());
-                bundle.putLong(PlanetDbAdapter.KEY_SITES_LAT, Long.valueOf(mLatText.getText().toString()));
-                bundle.putLong(PlanetDbAdapter.KEY_SITES_LONG, Long.valueOf(mLongiText.getText().toString()));
-                bundle.putLong(PlanetDbAdapter.KEY_SITES_ZOOM, Long.valueOf(mZoomText.getText().toString()));
-
-                if (mRowId != null) {
-                    bundle.putInt(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
-                }
-
-                Intent mIntent = new Intent();
-                mIntent.putExtras(bundle);
-                setResult(RESULT_OK, mIntent);
+                setResult(RESULT_OK);
                 finish();
             }
 
@@ -134,12 +97,79 @@ public class SiteEdit extends Activity {
 		});
         
     }
+	     private void saveState() {
+
+             String name = mNameText.getText().toString();
+             String description = mDescriptionText.getText().toString();
+             Integer typeId = Integer.valueOf(mTypeIdText.getText().toString());
+             String imageUrl = mImageUrlText.getText().toString();
+             Long lat = Long.valueOf(mLatText.getText().toString());
+             Long longi = Long.valueOf(mLongiText.getText().toString());
+             Long zoom = Long.valueOf(mZoomText.getText().toString());
+             
+         	if (mRowId == null) {
+                 Long id = mDbHelper.createSite(name, description, typeId, imageUrl, lat, longi, zoom);
+                 if (id > 0) {
+                     mRowId = id;
+                 }
+             } else {
+                 mDbHelper.updateSite(mRowId,name, description, typeId, imageUrl, lat, longi, zoom);
+             }
+
+
+	     }
+
+	    
+	    public void fillData(Long mRowId) {
+	    	
+	    	mSitesCursor = mDbHelper.fetchSite(mRowId);
+	        mSitesCursor.moveToFirst();
+	        startManagingCursor(mSitesCursor);
+
+            String name = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_NAME));
+            String description = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_DESCRIPTION));
+            Integer type_id = mSitesCursor.getInt(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_TYPE_ID));
+            String image_url = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_IMAGE_URL));
+            Long lat = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_LAT));
+            Long longi = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_LONG));
+            Long zoom = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_ZOOM));
+	    	
+            if (name != null) {
+            	mNameText.setText(name);
+            } else { mNameText.setText("Nombre");}
+            if (description != null) {
+            	mDescriptionText.setText(description);
+            }else { mDescriptionText.setText("Descripción");}
+            if (type_id != null) {
+            	mTypeIdText.setText((type_id.toString()));
+            }else { mTypeIdText.setText("Tipo");}
+            if (image_url != null) {
+            	mImageUrlText.setText(image_url);
+            	File turu = new File(image_url);
+            	if ( turu.exists() ) {
+               		Uri tururu = Uri.fromFile(turu);
+               		mSiteImage.setImageURI(tururu);
+               		}
+            		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
+            }else { mImageUrlText.setText("Fotografía");}
+            if (lat != null) {
+            	mLatText.setText(lat.toString());
+            }else { mLatText.setText("Latitud");}
+            if (longi != null) {
+            	mLongiText.setText(longi.toString());
+            }else { mLongiText.setText("Longitud");}
+            if (zoom != null) {
+            	mZoomText.setText(zoom.toString());
+            }else { mZoomText.setText("Zoom");}
+            
+        }
 
     public void takePhoto(){
 
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 		long captureTime = System.currentTimeMillis();
-        String photoPath = Environment.getExternalStorageDirectory() + "/DCIM/Camera/Planet" + captureTime + ".jpg";
+//        String photoPath = Environment.getExternalStorageDirectory() + "/DCIM/Camera/Planet" + captureTime + ".jpg";
+        String photoPath = "/sdcard/DCIM/Camera/Planet" + captureTime + ".jpg";
         File photo = new File( photoPath);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
         newImageUri = Uri.fromFile(photo);
@@ -158,6 +188,22 @@ public class SiteEdit extends Activity {
         		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
             }
         }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveState();
+        outState.putSerializable(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveState();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fillData(mRowId);
     }
 }
 

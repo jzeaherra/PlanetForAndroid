@@ -135,16 +135,16 @@ public class SitesActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Cursor c = mDbHelper.fetchSite( (int)id  );
+//        Cursor c = mDbHelper.fetchSite( (int)id  );
         Intent i = new Intent(this, SiteEdit.class);
-        i.putExtra(PlanetDbAdapter.KEY_SITES_ROWID, (int) id);
-        i.putExtra(PlanetDbAdapter.KEY_SITES_NAME, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_NAME )));
-        i.putExtra(PlanetDbAdapter.KEY_SITES_DESCRIPTION, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_DESCRIPTION )));
-        i.putExtra(PlanetDbAdapter.KEY_SITES_TYPE_ID, c.getInt( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_TYPE_ID )));
-        i.putExtra(PlanetDbAdapter.KEY_SITES_IMAGE_URL, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_IMAGE_URL )));
-        i.putExtra(PlanetDbAdapter.KEY_SITES_LAT, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_LAT )));
-        i.putExtra(PlanetDbAdapter.KEY_SITES_LONG, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_LONG )));
-        i.putExtra(PlanetDbAdapter.KEY_SITES_ZOOM, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_ZOOM )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_ROWID, id);
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_NAME, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_NAME )));
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_DESCRIPTION, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_DESCRIPTION )));
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_TYPE_ID, c.getInt( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_TYPE_ID )));
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_IMAGE_URL, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_IMAGE_URL )));
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_LAT, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_LAT )));
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_LONG, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_LONG )));
+//        i.putExtra(PlanetDbAdapter.KEY_SITES_ZOOM, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_ZOOM )));
 
         startActivityForResult(i, ACTIVITY_EDIT);
     }
@@ -152,34 +152,33 @@ public class SitesActivity extends ListActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Bundle extras = intent.getExtras();
-        switch(requestCode) {
-            case ACTIVITY_CREATE:
-                String name = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
-                String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
-                int type_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
-                String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
-                Long lat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
-                Long longi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
-                Long zoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
-                mDbHelper.createSite( name,  description,  type_id,  image_url, lat,  longi,  zoom);
+//        Bundle extras = intent.getExtras();
+//        switch(requestCode) {
+//            case ACTIVITY_CREATE:
+//                String name = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
+//                String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
+//                int type_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
+//                String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
+//                Long lat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
+//                Long longi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
+//                Long zoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
+//                mDbHelper.createSite( name,  description,  type_id,  image_url, lat,  longi,  zoom);
+//                fillData();
+//                break;
+//            case ACTIVITY_EDIT:
+//                Long rowId = extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID);
+//                if (rowId != null) {
+//                    String editName = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
+//                    String editDescription = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
+//                    int editType_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
+//                    String editImage_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
+//                    Long editLat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
+//                    Long editLongi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
+//                    Long editZoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
+//                    mDbHelper.updateSite(rowId, editName, editDescription, editType_id,  editImage_url, editLat, editLongi, editZoom );
+//                }
                 fillData();
-                break;
-            case ACTIVITY_EDIT:
-                Integer rowId = extras.getInt(PlanetDbAdapter.KEY_SITES_ROWID);
-                if (rowId != null) {
-                    String editName = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
-                    String editDescription = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
-                    int editType_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
-                    String editImage_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
-                    Long editLat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
-                    Long editLongi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
-                    Long editZoom = extras.getLong(PlanetDbAdapter.KEY_SITES_ZOOM);
-                    mDbHelper.updateSite(rowId, editName, editDescription, editType_id,  editImage_url, editLat, editLongi, editZoom );
-                }
-                fillData();
-                break;
-        }
+        
     }
 }
 

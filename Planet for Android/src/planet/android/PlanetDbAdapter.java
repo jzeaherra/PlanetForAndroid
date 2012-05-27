@@ -181,7 +181,7 @@ package planet.android;
 	     * @return rowId or -1 if failed
 	     */
 
-	    public long createSite(String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
+	    public Long createSite(String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
 	        ContentValues initialValues = new ContentValues();
 	        initialValues.put(KEY_SITES_NAME, name);
 	        initialValues.put(KEY_SITES_DESCRIPTION, description);
@@ -248,7 +248,7 @@ package planet.android;
 	     * @throws SQLException if note could not be found/retrieved
 	     */
 
-	    public Cursor fetchSite(int rowId) throws SQLException {
+	    public Cursor fetchSite(long rowId) throws SQLException {
 
 	        Cursor mCursor =
 
@@ -280,7 +280,7 @@ package planet.android;
 	     * @return true if the site / type was successfully updated, false otherwise
 	     */
 
-	    public boolean updateSite(Integer rowId, String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
+	    public boolean updateSite(Long rowId, String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
 	        ContentValues args = new ContentValues();
 	        args.put(KEY_SITES_NAME, name);
 	        args.put(KEY_SITES_DESCRIPTION, description);
