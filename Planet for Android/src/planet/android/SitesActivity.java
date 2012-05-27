@@ -1,22 +1,17 @@
 package planet.android;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.SimpleCursorAdapter.ViewBinder;
 
 public class SitesActivity extends ListActivity {
 	
@@ -112,45 +107,48 @@ public class SitesActivity extends ListActivity {
 
         return super.onMenuItemSelected(featureId, item);
     }
-//
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v,
-//            ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        menu.add(0, DELETE_ID, 0, R.string.menu_delete);
-//    }
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        switch(item.getItemId()) {
-//            case DELETE_ID:
-//                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//                mDbHelper.deleteNote(info.id);
-//                fillData();
-//                return true;
-//        }
-//        return super.onContextItemSelected(item);
-//    }
-//
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, DELETE_ID, 0, R.string.menu_delete);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case DELETE_ID:
+                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+                mDbHelper.deleteSite(info.id);
+                fillData();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
     private void createSite() {
         Intent i = new Intent(this, SiteEdit.class);
         startActivityForResult(i, ACTIVITY_CREATE);
     }
-//
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//        super.onListItemClick(l, v, position, id);
-//        Cursor c = mSitesCursor;
-//        c.moveToPosition(position);
-//        Intent i = new Intent(this, NoteEdit.class);
-//        i.putExtra(NotesDbAdapter.KEY_ROWID, id);
-//        i.putExtra(NotesDbAdapter.KEY_TITLE, c.getString(
-//                c.getColumnIndexOrThrow(NotesDbAdapter.KEY_TITLE)));
-//        i.putExtra(NotesDbAdapter.KEY_BODY, c.getString(
-//                c.getColumnIndexOrThrow(NotesDbAdapter.KEY_BODY)));
-//        startActivityForResult(i, ACTIVITY_EDIT);
-//    }
-//
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Cursor c = mDbHelper.fetchSite( (int)id  );
+        Intent i = new Intent(this, SiteEdit.class);
+        i.putExtra(PlanetDbAdapter.KEY_SITES_ROWID, (int) id);
+        i.putExtra(PlanetDbAdapter.KEY_SITES_NAME, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_NAME )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_DESCRIPTION, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_DESCRIPTION )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_TYPE_ID, c.getInt( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_TYPE_ID )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_IMAGE_URL, c.getString( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_IMAGE_URL )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_LAT, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_LAT )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_LONG, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_LONG )));
+        i.putExtra(PlanetDbAdapter.KEY_SITES_ZOOM, c.getLong( c.getColumnIndexOrThrow(PlanetDbAdapter.KEY_SITES_ZOOM )));
+
+        startActivityForResult(i, ACTIVITY_EDIT);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -168,7 +166,7 @@ public class SitesActivity extends ListActivity {
                 fillData();
                 break;
             case ACTIVITY_EDIT:
-                Long rowId = extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID);
+                Integer rowId = extras.getInt(PlanetDbAdapter.KEY_SITES_ROWID);
                 if (rowId != null) {
                     String editName = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
                     String editDescription = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);

@@ -248,7 +248,7 @@ package planet.android;
 	     * @throws SQLException if note could not be found/retrieved
 	     */
 
-	    public Cursor fetchSite(long rowId) throws SQLException {
+	    public Cursor fetchSite(int rowId) throws SQLException {
 
 	        Cursor mCursor =
 
@@ -280,7 +280,7 @@ package planet.android;
 	     * @return true if the site / type was successfully updated, false otherwise
 	     */
 
-	    public boolean updateSite(long rowId, String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
+	    public boolean updateSite(Integer rowId, String name, String description, int type_id, String image_url, long lat, long longi, long zoom) {
 	        ContentValues args = new ContentValues();
 	        args.put(KEY_SITES_NAME, name);
 	        args.put(KEY_SITES_DESCRIPTION, description);
@@ -295,7 +295,7 @@ package planet.android;
 	        
 	        return mDb.update(DATABASE_TABLE_SITES, args, KEY_SITES_ROWID + "=" + rowId, null) > 0;
 	    }
-	    public boolean updateType(long rowId, String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
+	    public boolean updateType(Integer rowId, String name, String description, long type_id, String image_url, String created_at,  String updated_at, String image_file_name,
 	    		String image_content_type, String image_file_size, long lat, long longi, long zoom, String last_sync) {
 	        ContentValues args = new ContentValues();
 	        args.put(KEY_TYPES_NAME, name);

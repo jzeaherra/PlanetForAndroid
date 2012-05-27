@@ -18,7 +18,7 @@ public class SiteEdit extends Activity {
     private EditText mLongiText;
     private EditText mZoomText;
     
-    private Long mRowId;
+    private Integer mRowId;
     
     
     @Override
@@ -37,13 +37,13 @@ public class SiteEdit extends Activity {
 
         Button submitButton = (Button) findViewById(R.id.submit);
 
-        mRowId = null;
+        mRowId = (Integer) null;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mRowId = extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID);
+            mRowId = extras.getInt(PlanetDbAdapter.KEY_SITES_ROWID);
             String name = extras.getString(PlanetDbAdapter.KEY_SITES_NAME);
             String description = extras.getString(PlanetDbAdapter.KEY_SITES_DESCRIPTION);
-            String type_id = extras.getString(PlanetDbAdapter.KEY_SITES_TYPE_ID);
+            Integer type_id = extras.getInt(PlanetDbAdapter.KEY_SITES_TYPE_ID);
             String image_url = extras.getString(PlanetDbAdapter.KEY_SITES_IMAGE_URL);
             Long lat = extras.getLong(PlanetDbAdapter.KEY_SITES_LAT);
             Long longi = extras.getLong(PlanetDbAdapter.KEY_SITES_LONG);
@@ -51,26 +51,34 @@ public class SiteEdit extends Activity {
 
             if (name != null) {
             	mNameText.setText(name);
-            }
+            } else { mNameText.setText("Nombre");}
             if (description != null) {
             	mDescriptionText.setText(description);
-            }
+            }else { mDescriptionText.setText("Descripción");}
             if (type_id != null) {
-            	mTypeIdText.setText(type_id);
-            }
+            	mTypeIdText.setText((type_id.toString()));
+            }else { mTypeIdText.setText("Tipo");}
             if (image_url != null) {
             	mImageUrlText.setText(image_url);
-            }
+            }else { mImageUrlText.setText("Fotografía");}
             if (lat != null) {
             	mLatText.setText(lat.toString());
-            }
+            }else { mLatText.setText("Latitud");}
             if (longi != null) {
             	mLongiText.setText(longi.toString());
-            }
+            }else { mLongiText.setText("Longitud");}
             if (zoom != null) {
             	mZoomText.setText(zoom.toString());
-            }
+            }else { mZoomText.setText("Zoom");}
             
+        }else{
+        	mNameText.setText("Nombre");
+        	mDescriptionText.setText("Descripción");
+        	mTypeIdText.setText("Tipo");
+        	mImageUrlText.setText("Fotografía");
+        	mLatText.setText("Latitud");
+        	mLongiText.setText("Longitud");
+        	mZoomText.setText("Zoom");
         }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -80,14 +88,14 @@ public class SiteEdit extends Activity {
 
                 bundle.putString(PlanetDbAdapter.KEY_SITES_NAME, mNameText.getText().toString());
                 bundle.putString(PlanetDbAdapter.KEY_SITES_DESCRIPTION, mDescriptionText.getText().toString());
-                bundle.putString(PlanetDbAdapter.KEY_SITES_TYPE_ID, mTypeIdText.getText().toString());
+                bundle.putInt(PlanetDbAdapter.KEY_SITES_TYPE_ID, Integer.valueOf(mTypeIdText.getText().toString()));
                 bundle.putString(PlanetDbAdapter.KEY_SITES_IMAGE_URL, mImageUrlText.getText().toString());
                 bundle.putLong(PlanetDbAdapter.KEY_SITES_LAT, Long.valueOf(mLatText.getText().toString()));
                 bundle.putLong(PlanetDbAdapter.KEY_SITES_LONG, Long.valueOf(mLongiText.getText().toString()));
                 bundle.putLong(PlanetDbAdapter.KEY_SITES_ZOOM, Long.valueOf(mZoomText.getText().toString()));
 
                 if (mRowId != null) {
-                    bundle.putLong(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
+                    bundle.putInt(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
                 }
 
                 Intent mIntent = new Intent();
@@ -98,5 +106,42 @@ public class SiteEdit extends Activity {
 
         });
     }
+//    private Uri imageUri;
+//
+//    public void takePhoto(View view) {
+//        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//        File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                Uri.fromFile(photo));
+//        imageUri = Uri.fromFile(photo);
+//        startActivityForResult(intent, TAKE_PICTURE);
+//    }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//        case TAKE_PICTURE:
+//            if (resultCode == Activity.RESULT_OK) {
+//                Uri selectedImage = imageUri;
+//                getContentResolver().notifyChange(selectedImage, null);
+//                ImageView imageView = (ImageView) findViewById(R.id.ImageView);
+//                ContentResolver cr = getContentResolver();
+//                Bitmap bitmap;
+//                try {
+//                     bitmap = android.provider.MediaStore.Images.Media
+//                     .getBitmap(cr, selectedImage);
+//
+//                    imageView.setImageBitmap(bitmap);
+//                    Toast.makeText(this, selectedImage.toString(),
+//                            Toast.LENGTH_LONG).show();
+//                } catch (Exception e) {
+//                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+//                            .show();
+//                    Log.e("Camera", e.toString());
+//                }
+//            }
+//        }
+//    }
 }
 

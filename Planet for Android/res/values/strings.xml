@@ -6,5 +6,6 @@
     <string name="no_sites">No has creado ningún sitio aún...</string>
     <string name="menu_insert">Añadir Sitio</string>
     <string name="site_edit">Edita el sitio:</string>
+    <string name="menu_delete">Borrar este sitio...</string>
 
 </resources>
