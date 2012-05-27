@@ -1,19 +1,31 @@
 package planet.android;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 public class SiteEdit extends Activity {
 	
 	
-    private EditText mNameText;
+    private static final int TAKE_PICTURE = 0;
+    
+    private Uri newImageUri;
+    
+	private EditText mNameText;
     private EditText mDescriptionText;
     private EditText mTypeIdText;
     private EditText mImageUrlText;
+    private ImageView mSiteImage;
     private EditText mLatText;
     private EditText mLongiText;
     private EditText mZoomText;
@@ -31,6 +43,7 @@ public class SiteEdit extends Activity {
         mDescriptionText = (EditText) findViewById(R.id.description);
         mTypeIdText = (EditText) findViewById(R.id.type_id);
         mImageUrlText = (EditText) findViewById(R.id.image_url);
+        mSiteImage = (ImageView) findViewById(R.id.siteImage);
         mLatText = (EditText) findViewById(R.id.lat);
         mLongiText = (EditText) findViewById(R.id.longi);
         mZoomText = (EditText) findViewById(R.id.zoom);
@@ -60,6 +73,11 @@ public class SiteEdit extends Activity {
             }else { mTypeIdText.setText("Tipo");}
             if (image_url != null) {
             	mImageUrlText.setText(image_url);
+            	try { 
+            		Uri tururu = Uri.parse(image_url);
+            		if (new File(tururu.toString()).exists() ) {mSiteImage.setImageURI(tururu);}
+            		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
+            		} catch (Exception e){}
             }else { mImageUrlText.setText("Fotografía");}
             if (lat != null) {
             	mLatText.setText(lat.toString());
@@ -105,43 +123,41 @@ public class SiteEdit extends Activity {
             }
 
         });
+        
+        mSiteImage.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+
+				takePhoto();
+				
+			}
+		});
+        
     }
-//    private Uri imageUri;
-//
-//    public void takePhoto(View view) {
-//        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-//        File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT,
-//                Uri.fromFile(photo));
-//        imageUri = Uri.fromFile(photo);
-//        startActivityForResult(intent, TAKE_PICTURE);
-//    }
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//        case TAKE_PICTURE:
-//            if (resultCode == Activity.RESULT_OK) {
-//                Uri selectedImage = imageUri;
-//                getContentResolver().notifyChange(selectedImage, null);
-//                ImageView imageView = (ImageView) findViewById(R.id.ImageView);
-//                ContentResolver cr = getContentResolver();
-//                Bitmap bitmap;
-//                try {
-//                     bitmap = android.provider.MediaStore.Images.Media
-//                     .getBitmap(cr, selectedImage);
-//
-//                    imageView.setImageBitmap(bitmap);
-//                    Toast.makeText(this, selectedImage.toString(),
-//                            Toast.LENGTH_LONG).show();
-//                } catch (Exception e) {
-//                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
-//                            .show();
-//                    Log.e("Camera", e.toString());
-//                }
-//            }
-//        }
-//    }
+
+    public void takePhoto(){
+
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		long captureTime = System.currentTimeMillis();
+        String photoPath = Environment.getExternalStorageDirectory() + "/DCIM/Camera/Planet" + captureTime + ".jpg";
+        File photo = new File( photoPath);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+        newImageUri = Uri.fromFile(photo);
+    	mImageUrlText.setText(newImageUri.toString());
+        startActivityForResult(intent, TAKE_PICTURE);
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+        case TAKE_PICTURE:
+            if (resultCode == Activity.RESULT_OK) {
+        		Uri tururu = Uri.parse(mImageUrlText.getText().toString());
+        		if (new File(tururu.toString()).exists() ) {mSiteImage.setImageURI(tururu);}
+        		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
+            }
+        }
+    }
 }
 
