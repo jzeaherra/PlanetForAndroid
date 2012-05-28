@@ -17,15 +17,15 @@ public class PlanetforAndroidActivity extends TabActivity {
         TabHost tabHost = getTabHost();
         
         // Tab for Types
-        TabSpec typespec = tabHost.newTabSpec("Types");
+        TabSpec typespec = tabHost.newTabSpec("Tipos");
         // setting Title and Icon for the Tab
-        typespec.setIndicator("Types", getResources().getDrawable(R.drawable.icon_types_tab));
+        typespec.setIndicator("Tipos", getResources().getDrawable(R.drawable.icon_types_tab));
         Intent typesIntent = new Intent(this, TypesActivity.class);
         typespec.setContent(typesIntent);
  
         // Tab for Sites
-        TabSpec sitespec = tabHost.newTabSpec("Sites");
-        sitespec.setIndicator("Sites", getResources().getDrawable(R.drawable.icon_sites_tab));
+        TabSpec sitespec = tabHost.newTabSpec("Sitios");
+        sitespec.setIndicator("Sitios", getResources().getDrawable(R.drawable.icon_sites_tab));
         Intent sitesIntent = new Intent(this, SitesActivity.class);
         sitespec.setContent(sitesIntent);
  

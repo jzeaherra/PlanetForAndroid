@@ -22,6 +22,8 @@
         <activity android:name="TripsActivity"></activity>
         <activity android:name="TypesActivity"></activity>
         <activity android:name="SiteEdit"></activity>
+        <activity android:name="TypeEdit"></activity>
+        
     </application>
 
 </manifest>

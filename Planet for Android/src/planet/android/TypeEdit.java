@@ -1,20 +1,14 @@
 package planet.android;
 
-import java.io.File;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 public class TypeEdit extends Activity {
-    private static final int TAKE_PICTURE = 0;
     
 	private EditText mNameText;
     private EditText mDescriptionText;

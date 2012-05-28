@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, PlanetforAndroidActivity!</string>
     <string name="app_name">Planet for Android</string>
     <string name="no_sites">No has creado ningún sitio aún...</string>
     <string name="menu_insert">Añadir Sitio</string>
@@ -10,5 +8,6 @@
     <string name="submit_button">Actualizar Sitio</string>
     <string name="no_types">No se han creado tipos aun...</string>
     <string name="type_edit">Edita el tipo:</string>
+    <string name="submit_button_type">Actualizar tipo</string>
 
 </resources>
