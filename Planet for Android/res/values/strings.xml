@@ -8,5 +8,7 @@
     <string name="site_edit">Edita el sitio:</string>
     <string name="menu_delete">Borrar este sitio...</string>
     <string name="submit_button">Actualizar Sitio</string>
+    <string name="no_types">No se han creado tipos aun...</string>
+    <string name="type_edit">Edita el tipo:</string>
 
 </resources>
