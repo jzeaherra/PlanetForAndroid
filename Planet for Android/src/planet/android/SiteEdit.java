@@ -20,7 +20,7 @@ public class SiteEdit extends Activity {
 	
     private static final int TAKE_PICTURE = 0;
     
-    private Uri newImageUri;
+    private String newImagePath;
     
 	private EditText mNameText;
     private EditText mDescriptionText;
@@ -63,18 +63,13 @@ public class SiteEdit extends Activity {
         if (mRowId == null) {
             Bundle extras = getIntent().getExtras();
             mRowId = extras != null ? extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID)
-                                    : null;
-           	fillData(mRowId);
-        	
-        }else{
-        	mNameText.setText("Nombre");
-        	mDescriptionText.setText("Descripción");
-        	mTypeIdText.setText("Tipo");
-        	mImageUrlText.setText("Fotografía");
-        	mLatText.setText("Latitud");
-        	mLongiText.setText("Longitud");
-        	mZoomText.setText("Zoom");
+                                    : null;        	
         }
+        
+        newImagePath = (savedInstanceState == null) ? null :
+            (String) savedInstanceState.getSerializable("newImagePath");
+        
+        fillData(mRowId);     	
                 
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -122,17 +117,29 @@ public class SiteEdit extends Activity {
 	    
 	    public void fillData(Long mRowId) {
 	    	
-	    	mSitesCursor = mDbHelper.fetchSite(mRowId);
-	        mSitesCursor.moveToFirst();
-	        startManagingCursor(mSitesCursor);
+	    	String name = null ;
+	    	String description = null ;
+	    	Integer type_id = null ;
+	    	String image_url = null ;
+	    	Long lat = null ;
+	    	Long longi = null ;
+	    	Long zoom = null ;
+	    	
+	    	if (mRowId != null) {
+	    		mSitesCursor = mDbHelper.fetchSite(mRowId);
+	    		mSitesCursor.moveToFirst();
+	  	        startManagingCursor(mSitesCursor);
 
-            String name = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_NAME));
-            String description = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_DESCRIPTION));
-            Integer type_id = mSitesCursor.getInt(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_TYPE_ID));
-            String image_url = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_IMAGE_URL));
-            Long lat = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_LAT));
-            Long longi = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_LONG));
-            Long zoom = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_ZOOM));
+	              name = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_NAME));
+	              description = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_DESCRIPTION));
+	              type_id = mSitesCursor.getInt(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_TYPE_ID));
+	              image_url = mSitesCursor.getString(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_IMAGE_URL));
+	              lat = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_LAT));
+	              longi = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_LONG));
+	              zoom = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_ZOOM));
+	    	}
+	      
+	    	if (newImagePath != null){ image_url = newImagePath;}
 	    	
             if (name != null) {
             	mNameText.setText(name);
@@ -172,28 +179,29 @@ public class SiteEdit extends Activity {
         String photoPath = "/sdcard/DCIM/Camera/Planet" + captureTime + ".jpg";
         File photo = new File( photoPath);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-        newImageUri = Uri.fromFile(photo);
-    	mImageUrlText.setText(newImageUri.toString());
+        newImagePath = photoPath; 
+//    	mImageUrlText.setText(photoPath);
         startActivityForResult(intent, TAKE_PICTURE);
     }
     
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-        case TAKE_PICTURE:
-            if (resultCode == Activity.RESULT_OK) {
-        		Uri tururu = Uri.parse(mImageUrlText.getText().toString());
-        		if (new File(tururu.toString()).exists() ) {mSiteImage.setImageURI(tururu);}
-        		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+////        switch (requestCode) {
+////        case TAKE_PICTURE:
+////            if (resultCode == Activity.RESULT_OK) {
+////        		Uri tururu = Uri.parse(mImageUrlText.getText().toString());
+////        		if (new File(tururu.toString()).exists() ) {mSiteImage.setImageURI(tururu);}
+////        		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
+////            }
+////        }
+//    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
         outState.putSerializable(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
+        outState.putSerializable("newImagePath", newImagePath);
     }
     @Override
     protected void onPause() {
