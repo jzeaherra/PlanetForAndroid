@@ -27,6 +27,11 @@
         android:ems="10" 
         android:inputType="number"/>
 
+    <Spinner
+        android:id="@+id/type_id_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/image_url"
         android:layout_width="match_parent"
