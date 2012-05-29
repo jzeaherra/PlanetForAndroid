@@ -12,5 +12,11 @@
     <string name="author_info">Autor: Juan Antonio Zea Herranz\nEmail: juanantonio.zea.herranz@alumnos.upm.es</string>
     <string name="menu_author">Author...</string>
     <string name="menu_help">Ayuda</string>
-
+    <string name="help_title0">Planet for Android</string>
+    <string name="help_line0">   Bienvenido a Planet para Android, la versión móvil de la popular red social para viajeros. Siga las siguientes instrucciones para su uso y disfrute.\n\n</string>
+    <string name="help_title1">Pestaña Tipos</string>
+    <string name="help_line1">En esta pestaña puede definir los tipos de sitio.\n\nPara añadir un tipo:\n1.- Pulse menú -> añadir.\n2.-Rellene los datos y pulse actualizar.\n\nPara borrar, deje pulsado sobre un elemento de la lista, y pulse borrar.\n\nPara editar, simplemente toque un elemento de la lista.\n\n</string>
+    <string name="help_title2">Pestaña Sitios</string>
+    <string name="help_line2">En esta pestaña puede definir los sitios.\n\nPara añadir un sitio:\n1.- Pulse menú -> añadir.\n2.-Rellene los datos y pulse actualizar.\nTambién puede pulsar la imagen para hacer una foto del sitio.\n\nPara borrar, deje pulsado sobre un elemento de la lista, y pulse borrar.\n\nPara editar, simplemente toque un elemento de la lista.\n\n</string>
+    
 </resources>
