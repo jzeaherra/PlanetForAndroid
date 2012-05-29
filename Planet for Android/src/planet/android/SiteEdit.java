@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 public class SiteEdit extends Activity {
@@ -37,84 +39,98 @@ public class SiteEdit extends Activity {
     
     private PlanetDbAdapter mDbHelper;
 	private Cursor mSitesCursor;
-
+	private Cursor mTypesCursor;
+	SimpleCursorAdapter adapter;
+	
 	    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.site_edit_layout);
-        setTitle(R.string.site_edit);
-      
-        mDbHelper = new PlanetDbAdapter(this);
-        mDbHelper.open();
-        
-        mNameText = (EditText) findViewById(R.id.name);
-        mDescriptionText = (EditText) findViewById(R.id.description);
-        mTypeIdText = (EditText) findViewById(R.id.type_id);
-        mTypeSpinner = (Spinner) findViewById(R.id.type_id_spinner);
-        mImageUrlText = (EditText) findViewById(R.id.image_url);
-        mSiteImage = (ImageView) findViewById(R.id.siteImage);
-        mLatText = (EditText) findViewById(R.id.lat);
-        mLongiText = (EditText) findViewById(R.id.longi);
-        mZoomText = (EditText) findViewById(R.id.zoom);
+	    protected void onCreate(Bundle savedInstanceState) {
+	    	super.onCreate(savedInstanceState);
+	    	setContentView(R.layout.site_edit_layout);
+	    	setTitle(R.string.site_edit);
 
-        Button submitButton = (Button) findViewById(R.id.submit);
+	    	mDbHelper = new PlanetDbAdapter(this);
+	    	mDbHelper.open();
 
-        mRowId = null;
-        
-        mRowId = (savedInstanceState == null) ? null :
-            (Long) savedInstanceState.getSerializable(PlanetDbAdapter.KEY_SITES_ROWID);
-        if (mRowId == null) {
-            Bundle extras = getIntent().getExtras();
-            mRowId = extras != null ? extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID)
-                                    : null;        	
-        }
-        
-        newImagePath = (savedInstanceState == null) ? null :
-            (String) savedInstanceState.getSerializable("newImagePath");
-        
-        fillData(mRowId);     	
-                
+	    	mNameText = (EditText) findViewById(R.id.name);
+	    	mDescriptionText = (EditText) findViewById(R.id.description);
+	    	mTypeIdText = (EditText) findViewById(R.id.type_id);
+	    	mTypeSpinner = (Spinner) findViewById(R.id.type_id_spinner);
+	    	mImageUrlText = (EditText) findViewById(R.id.image_url);
+	    	mSiteImage = (ImageView) findViewById(R.id.siteImage);
+	    	mLatText = (EditText) findViewById(R.id.lat);
+	    	mLongiText = (EditText) findViewById(R.id.longi);
+	    	mZoomText = (EditText) findViewById(R.id.zoom);
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
+	    	Button submitButton = (Button) findViewById(R.id.submit);
 
-            public void onClick(View view) {
+	    	mRowId = null;
 
-                setResult(RESULT_OK);
-                finish();
-            }
+	    	mRowId = (savedInstanceState == null) ? null :
+	    		(Long) savedInstanceState.getSerializable(PlanetDbAdapter.KEY_SITES_ROWID);
+	    	if (mRowId == null) {
+	    		Bundle extras = getIntent().getExtras();
+	    		mRowId = extras != null ? extras.getLong(PlanetDbAdapter.KEY_SITES_ROWID)
+	    				: null;        	
+	    	}
 
-        });
-        
-        mSiteImage.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
+	    	newImagePath = (savedInstanceState == null) ? null :
+	    		(String) savedInstanceState.getSerializable("newImagePath");
 
-				takePhoto();
-				
-			}
-		});
-        
+	    	fillData(mRowId);     	
+
+
+	    	submitButton.setOnClickListener(new View.OnClickListener() {
+	    		public void onClick(View view) {
+	    			setResult(RESULT_OK);
+	    			finish();
+	    		}
+	    	});
+
+	    	mSiteImage.setOnClickListener(new View.OnClickListener() {
+	    		public void onClick(View v) {
+	    			takePhoto();
+	    		}
+	    	});
+
+
+	    	
+	    	mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+	    		
+	    	    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+	    	    	
+	    	    	mTypesCursor.moveToPosition(i);
+	    	    	Integer id = mTypesCursor.getInt(mTypesCursor.getColumnIndex(PlanetDbAdapter.KEY_TYPES_ROWID));
+	    	    	mTypeIdText.setText(id.toString()); 
+
+	    	    } 
+
+	    	    public void onNothingSelected(AdapterView<?> adapterView) {
+	    	        return;
+	    	    } 
+	    	}); 
+
     }
-	     private void saveState() {
+	    
+	    private void saveState() {
 
-             String name = mNameText.getText().toString();
-             String description = mDescriptionText.getText().toString();
-             Integer typeId = Integer.valueOf(mTypeIdText.getText().toString());
-             String imageUrl = mImageUrlText.getText().toString();
-             Long lat = Long.valueOf(mLatText.getText().toString());
-             Long longi = Long.valueOf(mLongiText.getText().toString());
-             Long zoom = Long.valueOf(mZoomText.getText().toString());
-             
-         	if (mRowId == null) {
-                 Long id = mDbHelper.createSite(name, description, typeId, imageUrl, lat, longi, zoom);
-                 if (id > 0) {
-                     mRowId = id;
-                 }
-             } else {
-                 mDbHelper.updateSite(mRowId,name, description, typeId, imageUrl, lat, longi, zoom);
-             }
+	    	String name = mNameText.getText().toString();
+	    	String description = mDescriptionText.getText().toString();
+	    	Integer typeId = Integer.valueOf(mTypeIdText.getText().toString());
+	    	String imageUrl = mImageUrlText.getText().toString();
+	    	Long lat = Long.valueOf(mLatText.getText().toString());
+	    	Long longi = Long.valueOf(mLongiText.getText().toString());
+	    	Long zoom = Long.valueOf(mZoomText.getText().toString());
 
-	     }
+	    	if (mRowId == null) {
+	    		Long id = mDbHelper.createSite(name, description, typeId, imageUrl, lat, longi, zoom);
+	    		if (id > 0) {
+	    			mRowId = id;
+	    		}
+	    	} else {
+	    		mDbHelper.updateSite(mRowId,name, description, typeId, imageUrl, lat, longi, zoom);
+	    	}
+
+	    }
 
 	    
 	    public void fillData(Long mRowId) {
@@ -126,6 +142,7 @@ public class SiteEdit extends Activity {
 	    	Long lat = null ;
 	    	Long longi = null ;
 	    	Long zoom = null ;
+	    	
 	    	
 	    	if (mRowId != null) {
 	    		mSitesCursor = mDbHelper.fetchSite(mRowId);
@@ -163,15 +180,37 @@ public class SiteEdit extends Activity {
             }else { mImageUrlText.setText("Fotograf�a");}
             if (lat != null) {
             	mLatText.setText(lat.toString());
-            }else { mLatText.setText("Latitud");}
+            }else { mLatText.setText("0");}
             if (longi != null) {
             	mLongiText.setText(longi.toString());
-            }else { mLongiText.setText("Longitud");}
+            }else { mLongiText.setText("0");}
             if (zoom != null) {
             	mZoomText.setText(zoom.toString());
-            }else { mZoomText.setText("Zoom");}
+            }else { mZoomText.setText("0");}
             
+//		We fill up the spinner....
+            mTypesCursor=mDbHelper.fetchAllTypes();
+            mTypesCursor.moveToFirst();
+            startManagingCursor(mTypesCursor);
+            
+            String[] from = new String[]{PlanetDbAdapter.KEY_TYPES_NAME};
+            int[] to = new int[]{android.R.id.text1};
+            adapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, mTypesCursor, from, to );
+            adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+            mTypeSpinner.setAdapter(adapter);
+            
+//		And try to select the previously selected item in the database.
+            // We don't do anything if we can't, so the first item is preselected.
+            if (type_id != null){
+            	while (true){
+            		if (type_id == mTypesCursor.getInt(mTypesCursor.getColumnIndex(PlanetDbAdapter.KEY_TYPES_ROWID))){
+                		mTypeSpinner.setSelection( mTypesCursor.getPosition());
+            		}
+            	if (!mTypesCursor.moveToNext()){break;}
+            	}
+            }
         }
+
 
     public void takePhoto(){
 
