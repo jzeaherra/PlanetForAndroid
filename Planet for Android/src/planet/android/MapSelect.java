@@ -40,6 +40,7 @@ public class MapSelect extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_select);
+		
 		myMapView = (MapView)findViewById(R.id.mapview);
 		myLongitude = (TextView)findViewById(R.id.longitude);
 		myLatitude = (TextView)findViewById(R.id.latitude);

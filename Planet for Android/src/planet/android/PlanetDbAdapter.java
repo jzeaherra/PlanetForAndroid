@@ -94,7 +94,7 @@ package planet.android;
 	    private static final String DATABASE_TABLE_TYPES = "types";
 	    private static final String DATABASE_TABLE_SITES = "sites";
 
-	    private static final int DATABASE_VERSION = 1;
+	    private static final int DATABASE_VERSION = 3;
 	    /**
 	     * Database creation sql statement
 	     */
@@ -104,7 +104,7 @@ package planet.android;
 	        		KEY_SITES_NAME + " text not null, "+
 	        		KEY_SITES_DESCRIPTION + " text not null, "+
 	        		KEY_SITES_TYPE_ID + " integer not null, "+
-	        		KEY_SITES_IMAGE_URL + " text not null, "+
+	        		KEY_SITES_IMAGE_URL + " text, "+
 	        		KEY_SITES_CREATED_AT + " text not null, "+
 	        		KEY_SITES_UPDATED_AT + " text not null, "+
 	        		KEY_SITES_LAT + " real not null, "+
@@ -143,7 +143,8 @@ package planet.android;
 	        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 	                    + newVersion + ", which will destroy all old data");
-	            db.execSQL("DROP TABLE IF EXISTS notes");
+	            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_SITES);
+	            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_TYPES);
 	            onCreate(db);
 	        }
 	    }

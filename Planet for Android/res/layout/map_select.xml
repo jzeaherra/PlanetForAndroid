@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Longitude:" />
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Latitude:" />
+    </LinearLayout>
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:clickable="true"
-        android:orientation="vertical" />
-
-    <Textview
-        android:id="@+id/latitude"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" />
-
-    <Textview
-        android:id="@+id/longitude"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" />
+        android:apiKey="0UAgjxe1pZUoanR3t_BmFVmwcHlLZ9Mbcx7S2Lw"
+        android:clickable="true" />
 
 </LinearLayout>

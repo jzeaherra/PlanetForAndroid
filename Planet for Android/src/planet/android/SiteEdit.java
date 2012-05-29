@@ -5,10 +5,8 @@ import java.io.File;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,11 +15,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class SiteEdit extends Activity {
 	
 	
     private static final int TAKE_PICTURE = 0;
+    private static final int GET_LOCATION = 1;
+
     
     private String myImagePath;
     private Integer myTypeId;
@@ -63,6 +64,7 @@ public class SiteEdit extends Activity {
 	    	mZoomText = (EditText) findViewById(R.id.zoom);
 
 	    	Button submitButton = (Button) findViewById(R.id.submit);
+	    	Button reqPosButton = (Button) findViewById(R.id.request_position);
 
 	    	mRowId = null;
 
@@ -87,6 +89,12 @@ public class SiteEdit extends Activity {
 	    		}
 	    	});
 
+	    	reqPosButton.setOnClickListener(new View.OnClickListener() {
+	    		public void onClick(View view) {
+	    			reqPosition();
+	    		}
+	    	});
+	    	
 	    	mSiteImage.setOnClickListener(new View.OnClickListener() {
 	    		public void onClick(View v) {
 	    			takePhoto();
@@ -113,7 +121,16 @@ public class SiteEdit extends Activity {
 
     }
 	    
-	    private void saveState() {
+	    protected void reqPosition() {
+			Intent intent = new Intent(this, MapSelect.class);
+	        intent.putExtra("lat", mLatText.toString());
+	        intent.putExtra("lat", mLatText.toString());
+	        intent.putExtra("lat", mLatText.toString());
+  	        startActivityForResult(intent, GET_LOCATION);
+			
+		}
+
+		private void saveState() {
 
 	    	String name = mNameText.getText().toString();
 	    	String description = mDescriptionText.getText().toString();
@@ -125,6 +142,7 @@ public class SiteEdit extends Activity {
 	    	Long longi = Long.valueOf(mLongiText.getText().toString());
 	    	Long zoom = Long.valueOf(mZoomText.getText().toString());
 
+	    	if (typeId != null){
 	    	if (mRowId == null) {
 	    		Long id = mDbHelper.createSite(name, description, typeId, imageUrl, lat, longi, zoom);
 	    		if (id > 0) {
@@ -132,6 +150,10 @@ public class SiteEdit extends Activity {
 	    		}
 	    	} else {
 	    		mDbHelper.updateSite(mRowId,name, description, typeId, imageUrl, lat, longi, zoom);
+	    	}
+	    	}else { 
+	    		Toast toast = Toast.makeText(getApplicationContext(), "Te lo advertí.. ¡No se guarda sin tipos!", Toast.LENGTH_LONG);
+	    		toast.show();
 	    	}
 
 	    }
@@ -183,7 +205,8 @@ public class SiteEdit extends Activity {
                		Uri tururu = Uri.fromFile(turu);
                		mSiteImage.setImageURI(tururu);
                		}
-            		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
+            		else {mSiteImage.setImageResource( R.drawable.ic_launcher );
+            		}    
 //            }else { mImageUrlText.setText("Fotografï¿½a");}
             }
             if (lat != null) {
@@ -200,6 +223,10 @@ public class SiteEdit extends Activity {
             mTypesCursor=mDbHelper.fetchAllTypes();
             mTypesCursor.moveToFirst();
             startManagingCursor(mTypesCursor);
+            if (mTypesCursor.getCount() == 0){
+	    		Toast toast = Toast.makeText(getApplicationContext(), "No existen tipos... Ve a crearlos primero o no podrás guardar sitios.", Toast.LENGTH_LONG);
+	    		toast.show();
+            }
             
             String[] from = new String[]{PlanetDbAdapter.KEY_TYPES_NAME};
             int[] to = new int[]{android.R.id.text1};
