@@ -23,13 +23,14 @@ public class SiteEdit extends Activity {
 	
     private static final int TAKE_PICTURE = 0;
     
-    private String newImagePath;
+    private String myImagePath;
+    private Integer myTypeId;
     
 	private EditText mNameText;
     private EditText mDescriptionText;
-    private EditText mTypeIdText;
+//    private EditText mTypeIdText;
     private Spinner mTypeSpinner;
-    private EditText mImageUrlText;
+//    private EditText mImageUrlText;
     private ImageView mSiteImage;
     private EditText mLatText;
     private EditText mLongiText;
@@ -53,9 +54,9 @@ public class SiteEdit extends Activity {
 
 	    	mNameText = (EditText) findViewById(R.id.name);
 	    	mDescriptionText = (EditText) findViewById(R.id.description);
-	    	mTypeIdText = (EditText) findViewById(R.id.type_id);
+//	    	mTypeIdText = (EditText) findViewById(R.id.type_id);
 	    	mTypeSpinner = (Spinner) findViewById(R.id.type_id_spinner);
-	    	mImageUrlText = (EditText) findViewById(R.id.image_url);
+//	    	mImageUrlText = (EditText) findViewById(R.id.image_url);
 	    	mSiteImage = (ImageView) findViewById(R.id.siteImage);
 	    	mLatText = (EditText) findViewById(R.id.lat);
 	    	mLongiText = (EditText) findViewById(R.id.longi);
@@ -73,7 +74,7 @@ public class SiteEdit extends Activity {
 	    				: null;        	
 	    	}
 
-	    	newImagePath = (savedInstanceState == null) ? null :
+	    	myImagePath = (savedInstanceState == null) ? null :
 	    		(String) savedInstanceState.getSerializable("newImagePath");
 
 	    	fillData(mRowId);     	
@@ -100,7 +101,8 @@ public class SiteEdit extends Activity {
 	    	    	
 	    	    	mTypesCursor.moveToPosition(i);
 	    	    	Integer id = mTypesCursor.getInt(mTypesCursor.getColumnIndex(PlanetDbAdapter.KEY_TYPES_ROWID));
-	    	    	mTypeIdText.setText(id.toString()); 
+//	    	    	mTypeIdText.setText(id.toString()); 
+	    	    	myTypeId = id;
 
 	    	    } 
 
@@ -115,8 +117,10 @@ public class SiteEdit extends Activity {
 
 	    	String name = mNameText.getText().toString();
 	    	String description = mDescriptionText.getText().toString();
-	    	Integer typeId = Integer.valueOf(mTypeIdText.getText().toString());
-	    	String imageUrl = mImageUrlText.getText().toString();
+//	    	Integer typeId = Integer.valueOf(mTypeIdText.getText().toString());
+	    	Integer typeId = myTypeId;
+//	    	String imageUrl = mImageUrlText.getText().toString();
+	    	String imageUrl = myImagePath;
 	    	Long lat = Long.valueOf(mLatText.getText().toString());
 	    	Long longi = Long.valueOf(mLongiText.getText().toString());
 	    	Long zoom = Long.valueOf(mZoomText.getText().toString());
@@ -158,7 +162,7 @@ public class SiteEdit extends Activity {
 	              zoom = mSitesCursor.getLong(mSitesCursor.getColumnIndex(PlanetDbAdapter.KEY_SITES_ZOOM));
 	    	}
 	      
-	    	if (newImagePath != null){ image_url = newImagePath;}
+	    	if (myImagePath != null){ image_url = myImagePath;}
 	    	
             if (name != null) {
             	mNameText.setText(name);
@@ -167,17 +171,21 @@ public class SiteEdit extends Activity {
             	mDescriptionText.setText(description);
             }else { mDescriptionText.setText("Descripci�n");}
             if (type_id != null) {
-            	mTypeIdText.setText((type_id.toString()));
-            }else { mTypeIdText.setText("Tipo");}
+//            	mTypeIdText.setText((type_id.toString()));
+            	myTypeId = type_id;
+//            }else { mTypeIdText.setText("Tipo");}
+            }
             if (image_url != null) {
-            	mImageUrlText.setText(image_url);
+//            	mImageUrlText.setText(image_url);
+            	myImagePath = image_url;
             	File turu = new File(image_url);
             	if ( turu.exists() ) {
                		Uri tururu = Uri.fromFile(turu);
                		mSiteImage.setImageURI(tururu);
                		}
             		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
-            }else { mImageUrlText.setText("Fotograf�a");}
+//            }else { mImageUrlText.setText("Fotograf�a");}
+            }
             if (lat != null) {
             	mLatText.setText(lat.toString());
             }else { mLatText.setText("0");}
@@ -220,8 +228,7 @@ public class SiteEdit extends Activity {
         String photoPath = "/sdcard/DCIM/Camera/Planet" + captureTime + ".jpg";
         File photo = new File( photoPath);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-        newImagePath = photoPath; 
-//    	mImageUrlText.setText(photoPath);
+        myImagePath = photoPath; 
         startActivityForResult(intent, TAKE_PICTURE);
     }
     
@@ -242,7 +249,7 @@ public class SiteEdit extends Activity {
         super.onSaveInstanceState(outState);
         saveState();
         outState.putSerializable(PlanetDbAdapter.KEY_SITES_ROWID, mRowId);
-        outState.putSerializable("newImagePath", newImagePath);
+        outState.putSerializable("newImagePath", myImagePath);
     }
     @Override
     protected void onPause() {
