@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 public class SiteEdit extends Activity {
 	
@@ -25,6 +26,7 @@ public class SiteEdit extends Activity {
 	private EditText mNameText;
     private EditText mDescriptionText;
     private EditText mTypeIdText;
+    private Spinner mTypeSpinner;
     private EditText mImageUrlText;
     private ImageView mSiteImage;
     private EditText mLatText;
@@ -48,6 +50,7 @@ public class SiteEdit extends Activity {
         mNameText = (EditText) findViewById(R.id.name);
         mDescriptionText = (EditText) findViewById(R.id.description);
         mTypeIdText = (EditText) findViewById(R.id.type_id);
+        mTypeSpinner = (Spinner) findViewById(R.id.type_id_spinner);
         mImageUrlText = (EditText) findViewById(R.id.image_url);
         mSiteImage = (ImageView) findViewById(R.id.siteImage);
         mLatText = (EditText) findViewById(R.id.lat);
@@ -111,7 +114,6 @@ public class SiteEdit extends Activity {
                  mDbHelper.updateSite(mRowId,name, description, typeId, imageUrl, lat, longi, zoom);
              }
 
-
 	     }
 
 	    
@@ -146,7 +148,7 @@ public class SiteEdit extends Activity {
             } else { mNameText.setText("Nombre");}
             if (description != null) {
             	mDescriptionText.setText(description);
-            }else { mDescriptionText.setText("Descripción");}
+            }else { mDescriptionText.setText("Descripciï¿½n");}
             if (type_id != null) {
             	mTypeIdText.setText((type_id.toString()));
             }else { mTypeIdText.setText("Tipo");}
@@ -158,7 +160,7 @@ public class SiteEdit extends Activity {
                		mSiteImage.setImageURI(tururu);
                		}
             		else {mSiteImage.setImageResource( R.drawable.ic_launcher );}    
-            }else { mImageUrlText.setText("Fotografía");}
+            }else { mImageUrlText.setText("Fotografï¿½a");}
             if (lat != null) {
             	mLatText.setText(lat.toString());
             }else { mLatText.setText("Latitud");}

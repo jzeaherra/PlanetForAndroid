@@ -20,6 +20,8 @@ public class TypesActivity extends ListActivity {
     
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
+    private static final int AUTHOR_ID = Menu.FIRST + 2;
+    private static final int HELP_ID = Menu.FIRST + 3;
     
     
 	private PlanetDbAdapter mDbHelper;
@@ -65,6 +67,8 @@ public class TypesActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, INSERT_ID, 0, R.string.menu_insert);
+        menu.add(0, AUTHOR_ID, 0, R.string.menu_author);
+        menu.add(0, HELP_ID, 0, R.string.menu_help);
         return true;
     }
 
@@ -74,6 +78,12 @@ public class TypesActivity extends ListActivity {
             case INSERT_ID:
                 createType();
                 return true;
+            case AUTHOR_ID:
+            	launchAuthor();
+            	return true;
+            case HELP_ID:
+            	launchHelp();
+            	return true;
         }
 
         return super.onMenuItemSelected(featureId, item);
@@ -103,6 +113,16 @@ public class TypesActivity extends ListActivity {
         startActivityForResult(i, ACTIVITY_CREATE);
     }
 
+    private void launchAuthor() {
+        Intent i = new Intent(this, Author.class);
+        startActivityForResult(i, ACTIVITY_CREATE);
+    }
+    
+    private void launchHelp() {
+        Intent i = new Intent(this, Help.class);
+        startActivityForResult(i, ACTIVITY_CREATE);
+    }
+    
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

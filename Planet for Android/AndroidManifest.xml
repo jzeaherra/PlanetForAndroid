@@ -23,6 +23,8 @@
         <activity android:name="TypesActivity"></activity>
         <activity android:name="SiteEdit"></activity>
         <activity android:name="TypeEdit"></activity>
+        <activity android:name="Author"></activity>
+        <activity android:name="Help"></activity>
         
     </application>
 
