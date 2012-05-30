@@ -152,7 +152,7 @@ public class SiteEdit extends Activity {
 	    		mDbHelper.updateSite(mRowId,name, description, typeId, imageUrl, lat, longi, zoom);
 	    	}
 	    	}else { 
-	    		Toast toast = Toast.makeText(getApplicationContext(), "Te lo advertí.. ¡No se guarda sin tipos!", Toast.LENGTH_LONG);
+	    		Toast toast = Toast.makeText(getApplicationContext(), "Te lo advertÃ­.. Â¡No se guarda sin tipos!", Toast.LENGTH_LONG);
 	    		toast.show();
 	    	}
 
@@ -191,7 +191,7 @@ public class SiteEdit extends Activity {
             } else { mNameText.setText("Nombre");}
             if (description != null) {
             	mDescriptionText.setText(description);
-            }else { mDescriptionText.setText("Descripciï¿½n");}
+            }else { mDescriptionText.setText("DescripciÃ³n");}
             if (type_id != null) {
 //            	mTypeIdText.setText((type_id.toString()));
             	myTypeId = type_id;
@@ -224,7 +224,7 @@ public class SiteEdit extends Activity {
             mTypesCursor.moveToFirst();
             startManagingCursor(mTypesCursor);
             if (mTypesCursor.getCount() == 0){
-	    		Toast toast = Toast.makeText(getApplicationContext(), "No existen tipos... Ve a crearlos primero o no podrás guardar sitios.", Toast.LENGTH_LONG);
+	    		Toast toast = Toast.makeText(getApplicationContext(), "No existen tipos... Ve a crearlos primero o no podrÃ¡s guardar sitios.", Toast.LENGTH_LONG);
 	    		toast.show();
             }
             

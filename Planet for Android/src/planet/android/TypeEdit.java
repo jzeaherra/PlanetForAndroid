@@ -97,7 +97,7 @@ public class TypeEdit extends Activity {
             } else { mNameText.setText("Nombre");}
             if (description != null) {
             	mDescriptionText.setText(description);
-            }else { mDescriptionText.setText("Descripción");}
+            }else { mDescriptionText.setText("DescripciÃ³n");}
             
         }
 
